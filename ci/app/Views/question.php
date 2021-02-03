@@ -191,7 +191,7 @@
     <script src="assets/vendor/jquery.min.js"></script>
     <script src="assets/vendor/easytimer.js"></script>
     <script>
-        var cd = 20;
+        var cd = 600;
         var timer = new Timer();
         timer.start({
             countdown: true,
