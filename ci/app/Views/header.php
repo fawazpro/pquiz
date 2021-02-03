@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Quiz</title>
+    <title>Pure Heart Islamic Foundation || Quiz</title>
 
     <!-- Prevent the demo from appearing in search engines -->
     <meta name="robots" content="noindex" />
@@ -57,25 +57,12 @@
                     <a href="fixed-index.html" class="navbar-brand mr-16pt">
                         <span class="avatar avatar-sm navbar-brand-icon mr-0 mr-lg-8pt">
                             <span class="avatar-title rounded bg-primary"><img
-                                    src="assets/images/illustration/student/128/white.svg" alt="logo"
+                                    src="assets/images/logo/logo.jpeg" alt="logo"
                                     class="img-fluid" /></span>
                         </span>
 
-                        <span class="d-none d-lg-block">Luma</span>
+                        <span class="d-none d-lg-block">PHF Ogun</span>
                     </a>
-
-                    <span class="d-none d-md-flex align-items-center mr-16pt">
-                        <span class="avatar avatar-sm mr-12pt">
-                            <span class="avatar-title rounded navbar-avatar"><i
-                                    class="material-icons">opacity</i></span>
-                        </span>
-
-                        <small class="flex d-flex flex-column">
-                            <strong class="navbar-text-100">Experience IQ</strong>
-                            <span class="navbar-text-50">2,300 points</span>
-                        </small>
-                    </span>
-
                     <div class="flex"></div>
 
                     

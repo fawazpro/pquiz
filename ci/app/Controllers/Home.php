@@ -53,6 +53,7 @@ class Home extends BaseController
 			$this->message('The Quiz code you entered is incorrect');
 		}
 	}
+
 	public function login()
 	{
 		$session = session();
@@ -64,6 +65,7 @@ class Home extends BaseController
 			echo view('footer');
 		}
 	}
+
 	public function questions()
 	{
 		$session = session();
@@ -124,7 +126,7 @@ class Home extends BaseController
 		$Scoresheet = new \App\Models\Scoresheet();
 		$session = session();
 		$incoming = $this->request->getPost();
-		$incoming['password'] = md5($incoming['password']);
+		$incoming['password'] = $incoming['password'];
 		$incoming['clearance'] = 1;
 
 		if (!empty($db = $Users->where($incoming)->find())) {
@@ -142,11 +144,20 @@ class Home extends BaseController
 		}
 		} else {
 			try {
-				$db = $Users->insert($incoming);
-				return redirect()->to(base_url('/questions'));
+				$db_id = $Users->insert($incoming);
+				$db = $Users->where('id',$db_id)->find();
+				$ses_data = [
+				'email' => $db[0]['email'],
+				'user' => $db[0]['id'],
+				'Logged_in' => TRUE,
+				'clearance' => $db[0]['clearance']
+			];
+			$session->set($ses_data);
+			return redirect()->to(base_url('/questions'));
 			} catch (\Exception $e) {
-				$this->message('Email has been used before with a different password');
+				$this->message('Email has been used before with a different phone number');
 			}
+			
 		}
 	}
 
