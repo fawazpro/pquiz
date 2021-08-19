@@ -13,7 +13,7 @@ class Home extends BaseController
 	{
 		$var = new \App\Models\Variables();
 		$data = [
-			'quizinput' => $var->where('key','quizinput')->find()[0]['value'],
+			'quizinput' => $var->where('key', 'quizinput')->find()[0]['value'],
 		];
 		echo view('header');
 		echo view('access', $data);
@@ -76,7 +76,7 @@ class Home extends BaseController
 			$code = $session->code;
 
 			$res = $quizlet->where('code', $code)->find()[0];
-			echo view('question',$res);
+			echo view('question', $res);
 		}
 	}
 
@@ -92,31 +92,66 @@ class Home extends BaseController
 
 		$res = $quizlet->where('code', $code)->find()[0]['answers'];
 		foreach (json_decode($res) as $key => $ans) {
-			if(!empty($incoming[$key.'que'.$key])){
-				if($incoming[$key.'que'.$key] == $ans->ans){
+			if (!empty($incoming[$key . 'que' . $key])) {
+				if ($incoming[$key . 'que' . $key] == $ans->ans) {
 					$score++;
-				}else{
+				} else {
 					$score = $score + 0;
 				}
-			}else{
+			} else {
 				$score = $score + 0;
 			}
 		}
 		// Push the score to the broadsheet
 
-		if(!empty($db = $scoresheet->where(['user'=>$session->user,'quiz'=>$session->quiz])->find())){
-			if($score > $db[0]['score']){
-				$scoresheet->update($db[0]['id'],['score'=> $score]);
+		if (!empty($db = $scoresheet->where(['user' => $session->user, 'quiz' => $session->quiz])->find())) {
+			if ($score > $db[0]['score']) {
+				$scoresheet->update($db[0]['id'], ['score' => $score]);
 			}
-		}else{
-			$data = ['user'=>$session->user,'quiz'=>$session->quiz,'score'=>$score, 'sent'=>$session->published];
+		} else {
+			$data = ['user' => $session->user, 'quiz' => $session->quiz, 'score' => $score, 'sent' => $session->published];
 			$scoresheet->insert($data);
 		}
 
-		if($session->published){
-			$this->message("Your score is ".$score);
-		}else{
+		if ($session->published) {
+			$this->message("Your score is " . $score);
+		} else {
 			$this->message("Your Quiz has been submitted. You will receive your score via email");
+		}
+	}
+
+	public function solution($id)
+	{
+		$config         = new \Config\Encryption();
+		$config->key    = 'pureheartislamicfoundation';
+		$encrypter = \Config\Services::encrypter($config);
+		$coo = '$id';
+		// Outputs: This is a plain-text message!
+		$id = $encrypter->decrypt(urldecode($coo));
+
+		$quizlet = new \App\Models\Quiz();
+		// $id = md
+		$res = $quizlet->where('code', $id)->find()[0]['answers'];
+		$que = $quizlet->where('code', $id)->find()[0]['questions'];
+		foreach (json_decode($que) as $ky => $qus) {
+			echo (($ky+1).' '.$qus[0]->{0} . '<br>');
+			$option = [
+				'a' => $qus[0]->{1},
+				'b' => $qus[0]->{2},
+				'c' => $qus[0]->{3},
+				'd' => $qus[0]->{4},
+			];
+			foreach (json_decode($res) as $key => $ans) {
+				if ($qus[0]->id == $ans[0]->id) {
+					foreach ($option as $key => $opt) {
+						echo($opt);
+						if ($ans[0]->ans == $key){echo(' &#x1f4cc');}
+						echo '<br>';
+							
+					}
+					echo '<br>';
+				}
+			}
 		}
 	}
 
@@ -130,34 +165,33 @@ class Home extends BaseController
 		$incoming['clearance'] = 1;
 
 		if (!empty($db = $Users->where($incoming)->find())) {
-			if($res = $Scoresheet->where(['user'=>$db[0]['id'], 'quiz' => $session->quiz])->find()){
+			if ($res = $Scoresheet->where(['user' => $db[0]['id'], 'quiz' => $session->quiz])->find()) {
 				$this->message('A score has been recorded for this user on this particular quiz');
-			}else{
-			$ses_data = [
-				'email' => $db[0]['email'],
-				'user' => $db[0]['id'],
-				'Logged_in' => TRUE,
-				'clearance' => $db[0]['clearance']
-			];
-			$session->set($ses_data);
-			return redirect()->to(base_url('/questions'));
-		}
+			} else {
+				$ses_data = [
+					'email' => $db[0]['email'],
+					'user' => $db[0]['id'],
+					'Logged_in' => TRUE,
+					'clearance' => $db[0]['clearance']
+				];
+				$session->set($ses_data);
+				return redirect()->to(base_url('/questions'));
+			}
 		} else {
 			try {
 				$db_id = $Users->insert($incoming);
-				$db = $Users->where('id',$db_id)->find();
+				$db = $Users->where('id', $db_id)->find();
 				$ses_data = [
-				'email' => $db[0]['email'],
-				'user' => $db[0]['id'],
-				'Logged_in' => TRUE,
-				'clearance' => $db[0]['clearance']
-			];
-			$session->set($ses_data);
-			return redirect()->to(base_url('/questions'));
+					'email' => $db[0]['email'],
+					'user' => $db[0]['id'],
+					'Logged_in' => TRUE,
+					'clearance' => $db[0]['clearance']
+				];
+				$session->set($ses_data);
+				return redirect()->to(base_url('/questions'));
 			} catch (\Exception $e) {
 				$this->message('Email has been used before with a different phone number');
 			}
-			
 		}
 	}
 

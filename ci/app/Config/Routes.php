@@ -35,6 +35,7 @@ $routes->get('/access', 'Home::quizcode');
 $routes->get('/quiz', 'Home::processcode');
 $routes->get('/login', 'Home::login');
 $routes->get('/questions', 'Home::questions');
+$routes->get('/solution/(:alphanum)', 'Home::solution/$1');
 $routes->post('/quizlet', 'Home::postquiz');
 $routes->post('/login', 'Home::postlogin');
 
