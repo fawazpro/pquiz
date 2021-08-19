@@ -35,7 +35,9 @@ $routes->get('/access', 'Home::quizcode');
 $routes->get('/quiz', 'Home::processcode');
 $routes->get('/login', 'Home::login');
 $routes->get('/questions', 'Home::questions');
-$routes->get('/solution/(:alphanum)', 'Home::solution/$1');
+$routes->get('/solution/(:segment)', 'Home::solution/$1');
+$routes->get('/test/(:segment)/(:num)', 'Home::test/$1/$2');
+// $routes->get('/test/(:segment)', 'Home::test/$1');
 $routes->post('/quizlet', 'Home::postquiz');
 $routes->post('/login', 'Home::postlogin');
 

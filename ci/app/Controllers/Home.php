@@ -120,21 +120,41 @@ class Home extends BaseController
 		}
 	}
 
+	public function test($code, $do)
+	{
+		if ($do) {
+			$key = ' !u^e_%a#t@';
+			$pos = str_split($code);
+			$res = '';
+			foreach ($pos as $ky => $ps) {
+				$res = $res . str_split($key)[$ps];
+			}
+			return urlencode($res);
+		} else {
+			$key = ' !u^e_%a#t@';
+			$pos = urldecode($code);
+			$res = '';
+			$pos = str_split($pos);
+			$key = str_split($key);
+			foreach ($pos as $k => $os) {
+				foreach ($key as $ky => $ps) {
+					if ($pos[$k] == $ps)
+						$res = $res . $ky;
+				}
+			}
+			return $res;
+		}
+	}
+
 	public function solution($id)
 	{
-		$config         = new \Config\Encryption();
-		$config->key    = 'pureheartislamicfoundation';
-		$encrypter = \Config\Services::encrypter($config);
-		$coo = '$id';
-		// Outputs: This is a plain-text message!
-		$id = $encrypter->decrypt(urldecode($coo));
-
+		$id = $this->test($id, 0);
 		$quizlet = new \App\Models\Quiz();
 		// $id = md
 		$res = $quizlet->where('code', $id)->find()[0]['answers'];
 		$que = $quizlet->where('code', $id)->find()[0]['questions'];
 		foreach (json_decode($que) as $ky => $qus) {
-			echo (($ky+1).' '.$qus[0]->{0} . '<br>');
+			echo (($ky + 1) . ' ' . $qus[0]->{0} . '<br>');
 			$option = [
 				'a' => $qus[0]->{1},
 				'b' => $qus[0]->{2},
@@ -144,10 +164,11 @@ class Home extends BaseController
 			foreach (json_decode($res) as $key => $ans) {
 				if ($qus[0]->id == $ans[0]->id) {
 					foreach ($option as $key => $opt) {
-						echo($opt);
-						if ($ans[0]->ans == $key){echo(' &#x1f4cc');}
+						echo ($opt);
+						if ($ans[0]->ans == $key) {
+							echo (' &#x1f4cc');
+						}
 						echo '<br>';
-							
 					}
 					echo '<br>';
 				}
