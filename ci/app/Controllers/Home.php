@@ -149,23 +149,24 @@ class Home extends BaseController
 	public function solution($id)
 	{
 		$id = $this->test($id, 0);
+		echo ('<center>Solution for quiz '.$id.'</center><br>');
 		$quizlet = new \App\Models\Quiz();
 		// $id = md
 		$res = $quizlet->where('code', $id)->find()[0]['answers'];
 		$que = $quizlet->where('code', $id)->find()[0]['questions'];
 		foreach (json_decode($que) as $ky => $qus) {
-			echo (($ky + 1) . ' ' . $qus[0]->{0} . '<br>');
+			echo ('('.($ky + 1) . ') ' . $qus->{0} . '<br>');
 			$option = [
-				'a' => $qus[0]->{1},
-				'b' => $qus[0]->{2},
-				'c' => $qus[0]->{3},
-				'd' => $qus[0]->{4},
+				'a' => $qus->{1},
+				'b' => $qus->{2},
+				'c' => $qus->{3},
+				'd' => $qus->{4},
 			];
 			foreach (json_decode($res) as $key => $ans) {
-				if ($qus[0]->id == $ans[0]->id) {
+				if ($qus->id == $ans->id) {
 					foreach ($option as $key => $opt) {
-						echo ($opt);
-						if ($ans[0]->ans == $key) {
+						echo ($key.') '.$opt);
+						if ($ans->ans == $key) {
 							echo (' &#x1f4cc');
 						}
 						echo '<br>';
